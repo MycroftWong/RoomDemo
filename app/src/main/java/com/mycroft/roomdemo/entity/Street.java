@@ -1,12 +1,11 @@
 package com.mycroft.roomdemo.entity;
 
-import androidx.room.ColumnInfo;
-import androidx.room.Entity;
-import androidx.room.Ignore;
-import androidx.room.PrimaryKey;
+import androidx.room.*;
 import com.google.gson.annotations.SerializedName;
 
-@Entity(tableName = "street")
+@Entity(tableName = "street",
+        foreignKeys = @ForeignKey(entity = County.class, parentColumns = "id", childColumns = "county_id"),
+        indices = @Index("county_id"))
 public class Street {
 
     @PrimaryKey
@@ -14,7 +13,7 @@ public class Street {
     public int id;
 
     @SerializedName("county_id")
-    @ColumnInfo(name = "county_Id")
+    @ColumnInfo(name = "county_id")
     public int countyId;
 
     @ColumnInfo(name = "name")

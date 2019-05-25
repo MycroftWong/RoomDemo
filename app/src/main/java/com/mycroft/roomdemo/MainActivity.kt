@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.widget.ArrayAdapter
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import androidx.room.Room
 import chihane.jdaddressselector.AddressProvider
 import chihane.jdaddressselector.OnAddressSelectedListener
@@ -21,6 +22,8 @@ import com.mycroft.roomdemo.entity.County
 import com.mycroft.roomdemo.entity.Province
 import com.mycroft.roomdemo.entity.Street
 import com.mycroft.roomdemo.view.BottomDialog
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -63,7 +66,6 @@ class MainActivity : AppCompatActivity() {
             }
     }
 
-
     /**
      * 显示查询的类型dialog
      **/
@@ -88,7 +90,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
-     * 查询省份
+     * 查询省份，使用 coroutines
      **/
     private fun queryProvince() {
         GlobalScope.launch {
@@ -97,30 +99,40 @@ class MainActivity : AppCompatActivity() {
             for (item in provinces) {
                 data.add("id=${item.id}, name=${item.name}")
             }
+
             runOnUiThread { recyclerView.adapter?.notifyDataSetChanged() }
         }
     }
 
+    /**
+     * 查询城市，使用RxJava
+     **/
     private fun queryCity() {
-        GlobalScope.launch {
-            val cities = dao.loadAllCities()
-            data.clear()
-            for (item in cities) {
-                data.add("id=${item.id}, name=${item.name}")
+        val disposable = dao.loadAllCities()
+            .subscribeOn(Schedulers.io())
+            .map {
+                data.clear()
+                for (item in it) {
+                    data.add("id=${item.id}, name=${item.name}")
+                }
+                return@map data
             }
-            runOnUiThread { recyclerView.adapter?.notifyDataSetChanged() }
-        }
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe { recyclerView.adapter?.notifyDataSetChanged() }
     }
 
+    /**
+     * 查询区域，使用LiveData, 不确定这种用法是否正确
+     **/
     private fun queryCounty() {
-        GlobalScope.launch {
-            val counties = dao.loadAllCounties()
-            data.clear()
-            for (item in counties) {
-                data.add("id=${item.id}, name=${item.name}")
-            }
-            runOnUiThread { recyclerView.adapter?.notifyDataSetChanged() }
-        }
+        dao.loadAllCounties().observe(this,
+            Observer<List<County>> {
+                data.clear()
+                for (item in it) {
+                    data.add("id=${item.id}, name=${item.name}")
+                }
+                recyclerView.adapter?.notifyDataSetChanged()
+            })
     }
 
     private fun queryStreet() {
@@ -231,7 +243,6 @@ class MainActivity : AppCompatActivity() {
             runOnUiThread { BottomDialog.show(this@MainActivity, listener, provider) }
         }
     }
-
 
     /**
      * 判断所有地址是否插入数据库

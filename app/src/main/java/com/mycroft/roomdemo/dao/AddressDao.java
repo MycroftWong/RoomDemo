@@ -1,18 +1,23 @@
 package com.mycroft.roomdemo.dao;
 
+import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
-import com.mycroft.roomdemo.entity.City;
-import com.mycroft.roomdemo.entity.County;
-import com.mycroft.roomdemo.entity.Province;
-import com.mycroft.roomdemo.entity.Street;
+import com.mycroft.roomdemo.entity.*;
+import io.reactivex.Flowable;
 
 import java.util.List;
 
+/**
+ * @author mycroft
+ */
 @Dao
 public interface AddressDao {
+
+    @Query("SELECT * FROM StreetDetailInfo WHERE id=:id")
+    StreetDetailInfo loadStreetDetail(int id);
 
     /**
      * @return
@@ -21,14 +26,13 @@ public interface AddressDao {
     List<Province> loadAllPrivinces();
 
     @Query("SELECT * FROM city")
-    List<City> loadAllCities();
+    Flowable<List<City>> loadAllCities();
 
     @Query("SELECT * FROM city where province_id=:id")
     List<City> loadCitiesByProvinceId(int id);
 
     @Query("SELECT * FROM county")
-    List<County> loadAllCounties();
-
+    LiveData<List<County>> loadAllCounties();
 
     @Query("SELECT * FROM county where city_id=:id")
     List<County> loadCountiesByCityId(int id);
