@@ -94,7 +94,7 @@ class MainActivity : AppCompatActivity() {
      **/
     private fun queryProvince() {
         GlobalScope.launch {
-            val provinces = dao.loadAllPrivinces()
+            val provinces = dao.loadAllProvinces()
             data.clear()
             for (item in provinces) {
                 data.add("id=${item.id}, name=${item.name}")
@@ -163,7 +163,7 @@ class MainActivity : AppCompatActivity() {
                 ) {
 
                     GlobalScope.launch {
-                        val provinceList = dao.loadAllPrivinces()
+                        val provinceList = dao.loadAllProvinces()
 
                         val provinces = mutableListOf<chihane.jdaddressselector.model.Province>()
                         for (item in provinceList) {

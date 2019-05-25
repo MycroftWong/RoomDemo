@@ -60,7 +60,7 @@ class AddressDatabaseTest {
     @Test
     @Throws(Exception::class)
     fun testQuery() {
-        val provinceList = dao.loadAllPrivinces()
+        val provinceList = dao.loadAllProvinces()
 
         LogUtils.e(GsonUtils.toJson(provinceList))
 

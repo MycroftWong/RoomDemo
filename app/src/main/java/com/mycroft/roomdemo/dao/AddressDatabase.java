@@ -13,6 +13,11 @@ import com.mycroft.roomdemo.entity.*;
         exportSchema = false)
 public abstract class AddressDatabase extends RoomDatabase {
 
+    /**
+     * 获取地址数据库DAO
+     *
+     * @return {@link AddressDao}
+     */
     public abstract AddressDao addressDao();
 
 }

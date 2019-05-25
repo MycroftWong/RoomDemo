@@ -23,7 +23,7 @@ public interface AddressDao {
      * @return
      */
     @Query("SELECT * FROM province")
-    List<Province> loadAllPrivinces();
+    List<Province> loadAllProvinces();
 
     @Query("SELECT * FROM city")
     Flowable<List<City>> loadAllCities();
