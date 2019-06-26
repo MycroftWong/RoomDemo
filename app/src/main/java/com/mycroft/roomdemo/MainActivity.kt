@@ -9,6 +9,8 @@ import androidx.lifecycle.Observer
 import androidx.room.Room
 import chihane.jdaddressselector.AddressProvider
 import chihane.jdaddressselector.OnAddressSelectedListener
+import com.blankj.utilcode.util.GsonUtils
+import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
@@ -21,6 +23,7 @@ import com.mycroft.roomdemo.entity.City
 import com.mycroft.roomdemo.entity.County
 import com.mycroft.roomdemo.entity.Province
 import com.mycroft.roomdemo.entity.Street
+import com.mycroft.roomdemo.util.DatabaseCopier
 import com.mycroft.roomdemo.view.BottomDialog
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -70,6 +73,16 @@ class MainActivity : AppCompatActivity() {
      * 显示查询的类型dialog
      **/
     private fun showQueryDialog() {
+
+        GlobalScope.launch {
+
+            val database = DatabaseCopier.getInstance(this@MainActivity).roomDatabase
+            val dao = database.getWordDao()
+
+            val word = dao.queryWord()
+            LogUtils.e(GsonUtils.toJson(word))
+        }
+
         AlertDialog.Builder(this)
             .setAdapter(
                 ArrayAdapter<String>(

@@ -18,6 +18,14 @@ android {
         ndk {
             abiFilters "armeabi-v7a"
         }
+
+        // 生成数据库schema的文本
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = ["room.schemaLocation":
+                                     "$projectDir/schemas".toString()]
+            }
+        }
     }
     buildTypes {
         release {

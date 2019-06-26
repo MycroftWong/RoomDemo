@@ -294,9 +294,9 @@ public interface MyDao {
 
 所以事务处理实际上可以认为是多个操作的集合。具体可以参考官方文档，这里不讨论。
 
-## Migration 升级（迁移）
+## Migration 迁移（升级）
 
- 
+
 
  
 

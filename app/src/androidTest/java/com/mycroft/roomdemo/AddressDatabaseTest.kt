@@ -27,6 +27,7 @@ import java.io.Reader
 @RunWith(AndroidJUnit4::class)
 class AddressDatabaseTest {
 
+
     private lateinit var dao: AddressDao
 
     private lateinit var database: AddressDatabase
@@ -35,7 +36,6 @@ class AddressDatabaseTest {
 
     @Before
     fun createDb() {
-
         context = ApplicationProvider.getApplicationContext<Context>()
         database = Room.inMemoryDatabaseBuilder(context, AddressDatabase::class.java)
             .build()
